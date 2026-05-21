@@ -54,12 +54,15 @@ export default function Sidebar({ collapsed, onCollapsedChange, mobileOpen, onMo
         'w-64',
       ].join(' ')}
     >
-      {/* Brand */}
+      {/* Brand — layout switches between row (expanded) and column (collapsed) */}
       <div
-        className={`flex items-center gap-3 px-4 py-5 border-b border-gray-100 ${
-          collapsed ? 'md:justify-center' : ''
+        className={`border-b border-gray-100 transition-all duration-300 ${
+          collapsed
+            ? 'flex flex-col items-center gap-2.5 py-4'
+            : 'flex flex-row items-center gap-3 px-4 py-4'
         }`}
       >
+        {/* Logo icon */}
         <div
           className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
           style={{ background: 'linear-gradient(135deg, #7c3aed, #2563eb)' }}
@@ -73,19 +76,40 @@ export default function Sidebar({ collapsed, onCollapsedChange, mobileOpen, onMo
           </svg>
         </div>
 
-        <span
-          className={`font-bold text-base whitespace-nowrap transition-opacity duration-200 ${
-            collapsed ? 'md:hidden' : ''
-          }`}
-          style={{
-            background: 'linear-gradient(135deg, #7c3aed, #2563eb)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text',
-          }}
+        {/* Brand name — only when expanded */}
+        {!collapsed && (
+          <span
+            className="flex-1 font-bold text-base whitespace-nowrap"
+            style={{
+              background: 'linear-gradient(135deg, #7c3aed, #2563eb)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+            }}
+          >
+            VisaVerify
+          </span>
+        )}
+
+        {/* Collapse toggle — desktop only, always inside the sidebar */}
+        <button
+          onClick={() => onCollapsedChange(!collapsed)}
+          aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+          className="hidden md:flex w-8 h-8 rounded-xl items-center justify-center shrink-0 border border-gray-200 bg-gray-50 text-gray-400 hover:bg-white hover:text-[#7c3aed] hover:border-[#7c3aed] hover:shadow-sm transition-all duration-150 cursor-pointer"
         >
-          VisaVerify
-        </span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            className={`w-4 h-4 transition-transform duration-300 ${collapsed ? 'rotate-180' : ''}`}
+          >
+            <path
+              fillRule="evenodd"
+              d="M7.72 12.53a.75.75 0 0 1 0-1.06l7.5-7.5a.75.75 0 1 1 1.06 1.06L9.31 12l6.97 6.97a.75.75 0 1 1-1.06 1.06l-7.5-7.5Z"
+              clipRule="evenodd"
+            />
+          </svg>
+        </button>
       </div>
 
       {/* Nav items */}
@@ -115,27 +139,6 @@ export default function Sidebar({ collapsed, onCollapsedChange, mobileOpen, onMo
         })}
       </nav>
 
-      {/* Collapse toggle — desktop only */}
-      <button
-        onClick={() => onCollapsedChange(!collapsed)}
-        aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-        className="hidden md:flex absolute -right-3 top-[22px] z-10 w-6 h-6 rounded-full bg-white border border-gray-200 shadow-sm items-center justify-center hover:bg-gray-50 transition-colors cursor-pointer"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="currentColor"
-          className={`w-3.5 h-3.5 text-gray-500 transition-transform duration-300 ${
-            collapsed ? 'rotate-180' : ''
-          }`}
-        >
-          <path
-            fillRule="evenodd"
-            d="M7.72 12.53a.75.75 0 0 1 0-1.06l7.5-7.5a.75.75 0 1 1 1.06 1.06L9.31 12l6.97 6.97a.75.75 0 1 1-1.06 1.06l-7.5-7.5Z"
-            clipRule="evenodd"
-          />
-        </svg>
-      </button>
     </aside>
   )
 }
