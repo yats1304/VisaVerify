@@ -61,7 +61,8 @@ export default function SettingsPage() {
   const [dateFormat, setDateFormat] = useState('MM/DD/YYYY')
 
   // ── Delete account dialog ──
-  const [deleteConfirm, setDeleteConfirm] = useState('')
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [deleteTyped, setDeleteTyped] = useState('')
 
   function toggleNotif(key: keyof typeof notifs) {
     setNotifs((prev) => ({ ...prev, [key]: !prev[key] }))
@@ -227,26 +228,26 @@ export default function SettingsPage() {
             <p className="text-xs text-gray-500 mt-0.5">Permanently remove your account and all associated data.</p>
           </div>
           <button
-            onClick={() => setDeleteConfirm(deleteConfirm === 'open' ? '' : 'open')}
+            onClick={() => { setDeleteDialogOpen((o) => !o); setDeleteTyped('') }}
             className="shrink-0 px-4 py-2 rounded-xl text-sm font-semibold text-red-600 border-2 border-red-200 hover:bg-red-100 transition-colors cursor-pointer"
           >
             Delete Account
           </button>
         </div>
 
-        {deleteConfirm === 'open' && (
+        {deleteDialogOpen && (
           <div className="flex flex-col gap-3 p-4 rounded-xl bg-red-50 border border-red-200">
             <p className="text-sm text-gray-700">
               Type <span className="font-bold text-red-600">DELETE</span> to confirm:
             </p>
             <input
-              value={deleteConfirm === 'open' ? '' : deleteConfirm}
-              onChange={(e) => setDeleteConfirm(e.target.value)}
+              value={deleteTyped}
+              onChange={(e) => setDeleteTyped(e.target.value)}
               placeholder="DELETE"
               className="px-3.5 py-2.5 text-sm border border-red-200 rounded-xl outline-none focus:border-red-400 focus:ring-2 focus:ring-red-100 bg-white transition"
             />
             <button
-              disabled={deleteConfirm !== 'DELETE'}
+              disabled={deleteTyped !== 'DELETE'}
               className="px-4 py-2.5 rounded-xl text-sm font-bold text-white bg-red-500 hover:bg-red-600 disabled:opacity-40 disabled:cursor-not-allowed transition cursor-pointer"
             >
               Permanently Delete My Account
