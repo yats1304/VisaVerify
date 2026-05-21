@@ -2,6 +2,8 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import { useTheme } from 'next-themes'
 
 interface SidebarProps {
   collapsed: boolean
@@ -34,35 +36,36 @@ const navItems = [
 
 export default function Sidebar({ collapsed, onCollapsedChange, mobileOpen, onMobileClose }: SidebarProps) {
   const pathname = usePathname()
+  const { resolvedTheme, setTheme } = useTheme()
+
+  // Avoid hydration mismatch — resolvedTheme is undefined during SSR
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => setMounted(true), [])
+
+  const isDark = mounted && resolvedTheme === 'dark'
 
   return (
     <aside
       className={[
-        // Mobile: fixed drawer — slides in/out
         'fixed inset-y-0 left-0 z-30',
-        // md+: back in normal flow, always visible
         'md:relative md:z-auto md:translate-x-0',
-        // Slide transition
-        'transition-transform duration-300 ease-in-out',
-        mobileOpen ? 'translate-x-0' : '-translate-x-full',
-        // Width
-        'flex flex-col bg-white border-r border-gray-100 h-full shrink-0',
-        // Width transition for collapse (desktop only, md+)
         'transition-[transform,width] duration-300 ease-in-out',
+        mobileOpen ? 'translate-x-0' : '-translate-x-full',
+        'flex flex-col h-full shrink-0',
+        'bg-white dark:bg-slate-900 border-r border-gray-100 dark:border-slate-800',
         collapsed ? 'md:w-16' : 'md:w-64',
-        // Mobile always full width sidebar (w-64)
         'w-64',
       ].join(' ')}
     >
-      {/* Brand — layout switches between row (expanded) and column (collapsed) */}
+      {/* Brand */}
       <div
-        className={`border-b border-gray-100 transition-all duration-300 ${
+        className={`border-b border-gray-100 dark:border-slate-800 transition-all duration-300 ${
           collapsed
             ? 'flex flex-col items-center gap-2.5 py-4'
             : 'flex flex-row items-center gap-3 px-4 py-4'
         }`}
       >
-        {/* Logo icon */}
+        {/* Logo */}
         <div
           className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
           style={{ background: 'linear-gradient(135deg, #7c3aed, #2563eb)' }}
@@ -76,7 +79,6 @@ export default function Sidebar({ collapsed, onCollapsedChange, mobileOpen, onMo
           </svg>
         </div>
 
-        {/* Brand name — only when expanded */}
         {!collapsed && (
           <span
             className="flex-1 font-bold text-base whitespace-nowrap"
@@ -91,11 +93,11 @@ export default function Sidebar({ collapsed, onCollapsedChange, mobileOpen, onMo
           </span>
         )}
 
-        {/* Collapse toggle — desktop only, always inside the sidebar */}
+        {/* Collapse toggle */}
         <button
           onClick={() => onCollapsedChange(!collapsed)}
           aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-          className="hidden md:flex w-8 h-8 rounded-xl items-center justify-center shrink-0 border border-gray-200 bg-gray-50 text-gray-400 hover:bg-white hover:text-[#7c3aed] hover:border-[#7c3aed] hover:shadow-sm transition-all duration-150 cursor-pointer"
+          className="hidden md:flex w-8 h-8 rounded-xl items-center justify-center shrink-0 border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 text-gray-400 dark:text-slate-500 hover:bg-white dark:hover:bg-slate-700 hover:text-[#7c3aed] hover:border-[#7c3aed] hover:shadow-sm transition-all duration-150 cursor-pointer"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -112,7 +114,7 @@ export default function Sidebar({ collapsed, onCollapsedChange, mobileOpen, onMo
         </button>
       </div>
 
-      {/* Nav items */}
+      {/* Nav */}
       <nav className="flex-1 flex flex-col gap-1 p-3 pt-4">
         {navItems.map((item) => {
           const isActive = pathname === item.href
@@ -127,7 +129,7 @@ export default function Sidebar({ collapsed, onCollapsedChange, mobileOpen, onMo
                 collapsed ? 'md:justify-center' : '',
                 isActive
                   ? 'bg-[#7c3aed] text-white shadow-sm shadow-purple-200'
-                  : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900',
+                  : 'text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800 hover:text-gray-900 dark:hover:text-slate-100',
               ].join(' ')}
             >
               <span className="shrink-0">{item.icon}</span>
@@ -139,6 +141,35 @@ export default function Sidebar({ collapsed, onCollapsedChange, mobileOpen, onMo
         })}
       </nav>
 
+      {/* Dark / Light toggle */}
+      <div className="border-t border-gray-100 dark:border-slate-800 p-3">
+        <button
+          onClick={() => setTheme(isDark ? 'light' : 'dark')}
+          title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+          className={[
+            'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium w-full cursor-pointer',
+            'text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800 hover:text-gray-900 dark:hover:text-slate-100 transition-all duration-150',
+            collapsed ? 'md:justify-center' : '',
+          ].join(' ')}
+        >
+          <span className="shrink-0">
+            {isDark ? (
+              /* Sun — click to go light */
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+                <path d="M12 2.25a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V3a.75.75 0 0 1 .75-.75ZM7.5 12a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM18.894 6.166a.75.75 0 0 0-1.06-1.06l-1.591 1.59a.75.75 0 1 0 1.06 1.061l1.591-1.59ZM21.75 12a.75.75 0 0 1-.75.75h-2.25a.75.75 0 0 1 0-1.5H21a.75.75 0 0 1 .75.75ZM17.834 18.894a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 1 0-1.061 1.06l1.59 1.591ZM12 18a.75.75 0 0 1 .75.75V21a.75.75 0 0 1-1.5 0v-2.25A.75.75 0 0 1 12 18ZM7.758 17.303a.75.75 0 0 0-1.061-1.06l-1.591 1.59a.75.75 0 0 0 1.06 1.061l1.591-1.59ZM6 12a.75.75 0 0 1-.75.75H3a.75.75 0 0 1 0-1.5h2.25A.75.75 0 0 1 6 12ZM6.697 7.757a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 0 0-1.061 1.06l1.59 1.591Z" />
+              </svg>
+            ) : (
+              /* Moon — click to go dark */
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+                <path fillRule="evenodd" d="M9.528 1.718a.75.75 0 0 1 .162.819A8.97 8.97 0 0 0 9 6a9 9 0 0 0 9 9 8.97 8.97 0 0 0 3.463-.69.75.75 0 0 1 .981.98 10.503 10.503 0 0 1-9.694 6.46c-5.799 0-10.5-4.7-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 0 1 .818.162Z" clipRule="evenodd" />
+              </svg>
+            )}
+          </span>
+          <span className={`whitespace-nowrap ${collapsed ? 'md:hidden' : ''}`}>
+            {isDark ? 'Light Mode' : 'Dark Mode'}
+          </span>
+        </button>
+      </div>
     </aside>
   )
 }

@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Class-based dark mode — dark: utilities activate when html has .dark class */
+@custom-variant dark (html.dark &);
+
 @theme {
   --color-brand-purple: #7c3aed;
   --color-brand-purple-light: #ede9fe;

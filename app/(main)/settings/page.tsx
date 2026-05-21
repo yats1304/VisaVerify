@@ -8,18 +8,16 @@ function Toggle({ label, description, enabled, onChange }: ToggleProps) {
   return (
     <div className="flex items-center justify-between gap-4">
       <div className="flex flex-col gap-0.5 min-w-0">
-        <span className="text-sm font-medium text-gray-800">{label}</span>
-        <span className="text-xs text-gray-400 leading-relaxed">{description}</span>
+        <span className="text-sm font-medium text-gray-800 dark:text-slate-100">{label}</span>
+        <span className="text-xs text-gray-400 dark:text-slate-500 leading-relaxed">{description}</span>
       </div>
       <button
         role="switch"
         aria-checked={enabled}
         onClick={() => onChange(!enabled)}
-        className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7c3aed] focus-visible:ring-offset-2 ${enabled ? 'bg-[#7c3aed]' : 'bg-gray-200'}`}
+        className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7c3aed] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900 ${enabled ? 'bg-[#7c3aed]' : 'bg-gray-200 dark:bg-slate-700'}`}
       >
-        <span
-          className={`pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow-lg ring-0 transition-transform duration-200 ${enabled ? 'translate-x-5' : 'translate-x-0'}`}
-        />
+        <span className={`pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow-lg ring-0 transition-transform duration-200 ${enabled ? 'translate-x-5' : 'translate-x-0'}`} />
       </button>
     </div>
   )
@@ -27,10 +25,10 @@ function Toggle({ label, description, enabled, onChange }: ToggleProps) {
 
 function Section({ title, description, children }: { title: string; description: string; children: React.ReactNode }) {
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8 flex flex-col gap-5">
-      <div className="border-b border-gray-100 pb-4">
-        <h3 className="text-sm font-bold text-gray-800">{title}</h3>
-        <p className="text-xs text-gray-400 mt-0.5">{description}</p>
+    <div className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm p-6 sm:p-8 flex flex-col gap-5">
+      <div className="border-b border-gray-100 dark:border-slate-800 pb-4">
+        <h3 className="text-sm font-bold text-gray-800 dark:text-slate-100">{title}</h3>
+        <p className="text-xs text-gray-400 dark:text-slate-500 mt-0.5">{description}</p>
       </div>
       {children}
     </div>
@@ -38,7 +36,6 @@ function Section({ title, description, children }: { title: string; description:
 }
 
 export default function SettingsPage() {
-  // ── Notification toggles ──
   const [notifs, setNotifs] = useState({
     emailVerification: true,
     emailMarketing: false,
@@ -47,7 +44,6 @@ export default function SettingsPage() {
     weeklyReport: true,
   })
 
-  // ── Security ──
   const [twoFA, setTwoFA] = useState(false)
   const [sessionAlert, setSessionAlert] = useState(true)
   const [pwForm, setPwForm] = useState({ current: '', next: '', confirm: '' })
@@ -55,12 +51,10 @@ export default function SettingsPage() {
   const [pwSaving, setPwSaving] = useState(false)
   const [pwError, setPwError] = useState('')
 
-  // ── Appearance ──
   const [language, setLanguage] = useState('en')
   const [timezone, setTimezone] = useState('UTC-5')
   const [dateFormat, setDateFormat] = useState('MM/DD/YYYY')
 
-  // ── Delete account dialog ──
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [deleteTyped, setDeleteTyped] = useState('')
 
@@ -81,43 +75,35 @@ export default function SettingsPage() {
     setTimeout(() => setPwSaved(false), 3000)
   }
 
+  const inputCls = 'px-3.5 py-2.5 text-sm text-gray-800 dark:text-slate-100 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl outline-none focus:border-[#7c3aed] focus:bg-white dark:focus:bg-slate-700 focus:ring-2 focus:ring-[#7c3aed]/10 transition placeholder:text-gray-400 dark:placeholder:text-slate-500'
+
   return (
     <div className="flex flex-col gap-6 sm:gap-8 max-w-3xl mx-auto w-full pb-10">
 
-      {/* ── Notifications ── */}
+      {/* Notifications */}
       <Section title="Notification Preferences" description="Choose what you want to be notified about.">
-        <div className="flex flex-col gap-5 divide-y divide-gray-50">
+        <div className="flex flex-col gap-5 divide-y divide-gray-50 dark:divide-slate-800">
           <Toggle label="Email — Verification updates" description="Get notified when a document is verified or rejected." enabled={notifs.emailVerification} onChange={() => toggleNotif('emailVerification')} />
-          <div className="pt-4">
-            <Toggle label="Email — Product updates" description="News, tips and announcements from VisaVerify." enabled={notifs.emailMarketing} onChange={() => toggleNotif('emailMarketing')} />
-          </div>
-          <div className="pt-4">
-            <Toggle label="Push notifications" description="Real-time alerts in your browser." enabled={notifs.pushAlerts} onChange={() => toggleNotif('pushAlerts')} />
-          </div>
-          <div className="pt-4">
-            <Toggle label="SMS alerts" description="Text messages for critical status changes." enabled={notifs.smsAlerts} onChange={() => toggleNotif('smsAlerts')} />
-          </div>
-          <div className="pt-4">
-            <Toggle label="Weekly summary report" description="A digest of your activity sent every Monday." enabled={notifs.weeklyReport} onChange={() => toggleNotif('weeklyReport')} />
-          </div>
+          <div className="pt-4"><Toggle label="Email — Product updates" description="News, tips and announcements from VisaVerify." enabled={notifs.emailMarketing} onChange={() => toggleNotif('emailMarketing')} /></div>
+          <div className="pt-4"><Toggle label="Push notifications" description="Real-time alerts in your browser." enabled={notifs.pushAlerts} onChange={() => toggleNotif('pushAlerts')} /></div>
+          <div className="pt-4"><Toggle label="SMS alerts" description="Text messages for critical status changes." enabled={notifs.smsAlerts} onChange={() => toggleNotif('smsAlerts')} /></div>
+          <div className="pt-4"><Toggle label="Weekly summary report" description="A digest of your activity sent every Monday." enabled={notifs.weeklyReport} onChange={() => toggleNotif('weeklyReport')} /></div>
         </div>
       </Section>
 
-      {/* ── Security ── */}
+      {/* Security */}
       <Section title="Security" description="Manage your password and account protection.">
         <div className="flex flex-col gap-6">
-          {/* 2FA + session */}
-          <div className="flex flex-col gap-5 pb-5 border-b border-gray-100">
+          <div className="flex flex-col gap-5 pb-5 border-b border-gray-100 dark:border-slate-800">
             <Toggle label="Two-factor authentication (2FA)" description="Add an extra layer of security with a one-time code." enabled={twoFA} onChange={setTwoFA} />
             <Toggle label="New login alerts" description="Get notified when your account is accessed from a new device." enabled={sessionAlert} onChange={setSessionAlert} />
           </div>
 
-          {/* Change password */}
           <div className="flex flex-col gap-4">
-            <p className="text-xs font-semibold text-gray-600">Change Password</p>
+            <p className="text-xs font-semibold text-gray-600 dark:text-slate-400">Change Password</p>
             {(['current', 'next', 'confirm'] as const).map((k) => (
               <div key={k} className="flex flex-col gap-1.5">
-                <label className="text-xs font-medium text-gray-500">
+                <label className="text-xs font-medium text-gray-500 dark:text-slate-400">
                   {k === 'current' ? 'Current password' : k === 'next' ? 'New password' : 'Confirm new password'}
                 </label>
                 <input
@@ -125,7 +111,7 @@ export default function SettingsPage() {
                   value={pwForm[k]}
                   onChange={(e) => { setPwError(''); setPwForm((p) => ({ ...p, [k]: e.target.value })) }}
                   placeholder="••••••••"
-                  className="px-3.5 py-2.5 text-sm text-gray-800 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-[#7c3aed] focus:bg-white focus:ring-2 focus:ring-[#7c3aed]/10 transition"
+                  className={inputCls}
                 />
               </div>
             ))}
@@ -161,7 +147,7 @@ export default function SettingsPage() {
         </div>
       </Section>
 
-      {/* ── Appearance ── */}
+      {/* Appearance */}
       <Section title="Appearance & Locale" description="Adjust how VisaVerify looks and formats information.">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {[
@@ -200,11 +186,11 @@ export default function SettingsPage() {
             },
           ].map((sel) => (
             <div key={sel.label} className="flex flex-col gap-1.5">
-              <label className="text-xs font-semibold text-gray-600">{sel.label}</label>
+              <label className="text-xs font-semibold text-gray-600 dark:text-slate-400">{sel.label}</label>
               <select
                 value={sel.value}
                 onChange={(e) => sel.onChange(e.target.value)}
-                className="px-3.5 py-2.5 text-sm text-gray-800 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-[#7c3aed] focus:bg-white focus:ring-2 focus:ring-[#7c3aed]/10 transition cursor-pointer appearance-none"
+                className="px-3.5 py-2.5 text-sm text-gray-800 dark:text-slate-100 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl outline-none focus:border-[#7c3aed] focus:bg-white dark:focus:bg-slate-700 focus:ring-2 focus:ring-[#7c3aed]/10 transition cursor-pointer appearance-none"
               >
                 {sel.options.map((o) => (
                   <option key={o.value} value={o.value}>{o.label}</option>
@@ -215,36 +201,36 @@ export default function SettingsPage() {
         </div>
       </Section>
 
-      {/* ── Danger zone ── */}
-      <div className="bg-white rounded-2xl border border-red-100 shadow-sm p-6 sm:p-8 flex flex-col gap-5">
-        <div className="border-b border-red-100 pb-4">
+      {/* Danger zone */}
+      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-red-100 dark:border-red-900/30 shadow-sm p-6 sm:p-8 flex flex-col gap-5">
+        <div className="border-b border-red-100 dark:border-red-900/30 pb-4">
           <h3 className="text-sm font-bold text-red-600">Danger Zone</h3>
-          <p className="text-xs text-gray-400 mt-0.5">These actions are permanent and cannot be undone.</p>
+          <p className="text-xs text-gray-400 dark:text-slate-500 mt-0.5">These actions are permanent and cannot be undone.</p>
         </div>
 
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-xl bg-red-50 border border-red-100">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-xl bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-800/30">
           <div>
-            <p className="text-sm font-semibold text-gray-800">Delete Account</p>
-            <p className="text-xs text-gray-500 mt-0.5">Permanently remove your account and all associated data.</p>
+            <p className="text-sm font-semibold text-gray-800 dark:text-slate-100">Delete Account</p>
+            <p className="text-xs text-gray-500 dark:text-slate-400 mt-0.5">Permanently remove your account and all associated data.</p>
           </div>
           <button
             onClick={() => { setDeleteDialogOpen((o) => !o); setDeleteTyped('') }}
-            className="shrink-0 px-4 py-2 rounded-xl text-sm font-semibold text-red-600 border-2 border-red-200 hover:bg-red-100 transition-colors cursor-pointer"
+            className="shrink-0 px-4 py-2 rounded-xl text-sm font-semibold text-red-600 border-2 border-red-200 dark:border-red-800 hover:bg-red-100 dark:hover:bg-red-900/20 transition-colors cursor-pointer"
           >
             Delete Account
           </button>
         </div>
 
         {deleteDialogOpen && (
-          <div className="flex flex-col gap-3 p-4 rounded-xl bg-red-50 border border-red-200">
-            <p className="text-sm text-gray-700">
+          <div className="flex flex-col gap-3 p-4 rounded-xl bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-800/50">
+            <p className="text-sm text-gray-700 dark:text-slate-200">
               Type <span className="font-bold text-red-600">DELETE</span> to confirm:
             </p>
             <input
               value={deleteTyped}
               onChange={(e) => setDeleteTyped(e.target.value)}
               placeholder="DELETE"
-              className="px-3.5 py-2.5 text-sm border border-red-200 rounded-xl outline-none focus:border-red-400 focus:ring-2 focus:ring-red-100 bg-white transition"
+              className="px-3.5 py-2.5 text-sm text-gray-800 dark:text-slate-100 border border-red-200 dark:border-red-700 rounded-xl outline-none focus:border-red-400 focus:ring-2 focus:ring-red-100 dark:focus:ring-red-900/30 bg-white dark:bg-slate-800 transition placeholder:text-gray-400 dark:placeholder:text-slate-500"
             />
             <button
               disabled={deleteTyped !== 'DELETE'}

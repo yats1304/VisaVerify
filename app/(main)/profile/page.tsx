@@ -44,7 +44,6 @@ export default function ProfilePage() {
 
   async function handleSave() {
     setSaving(true)
-    // Simulate save delay
     await new Promise((r) => setTimeout(r, 800))
     setSaving(false)
     setSaved(true)
@@ -54,9 +53,8 @@ export default function ProfilePage() {
     <div className="flex flex-col gap-6 sm:gap-8 max-w-3xl mx-auto w-full pb-10">
 
       {/* Avatar card */}
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8">
+      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm p-6 sm:p-8">
         <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5">
-          {/* Avatar */}
           <div className="relative shrink-0">
             <div
               className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl flex items-center justify-center text-white text-3xl font-bold shadow-lg"
@@ -65,7 +63,7 @@ export default function ProfilePage() {
               {form.firstName.charAt(0)}{form.lastName.charAt(0)}
             </div>
             <button
-              className="absolute -bottom-2 -right-2 w-7 h-7 rounded-full bg-white border border-gray-200 shadow flex items-center justify-center hover:bg-gray-50 transition-colors cursor-pointer"
+              className="absolute -bottom-2 -right-2 w-7 h-7 rounded-full bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 shadow flex items-center justify-center hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors cursor-pointer"
               aria-label="Change avatar"
             >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5 text-[#7c3aed]">
@@ -75,11 +73,10 @@ export default function ProfilePage() {
             </button>
           </div>
 
-          {/* Name + meta */}
           <div className="flex flex-col gap-1 text-center sm:text-left">
-            <h2 className="text-lg font-bold text-gray-900">{form.firstName} {form.lastName}</h2>
-            <p className="text-sm text-gray-500">{form.role}</p>
-            <p className="text-xs text-gray-400">{form.email}</p>
+            <h2 className="text-lg font-bold text-gray-900 dark:text-slate-50">{form.firstName} {form.lastName}</h2>
+            <p className="text-sm text-gray-500 dark:text-slate-400">{form.role}</p>
+            <p className="text-xs text-gray-400 dark:text-slate-500">{form.email}</p>
             <div className="flex items-center justify-center sm:justify-start gap-2 mt-2">
               <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-[#ede9fe] text-[#7c3aed]">Pro Plan</span>
               <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-[#d1fae5] text-[#059669]">Active</span>
@@ -96,13 +93,13 @@ export default function ProfilePage() {
           ))}
         </div>
         <div className="mt-4">
-          <label className="block text-xs font-semibold text-gray-600 mb-1.5">Bio</label>
+          <label className="block text-xs font-semibold text-gray-600 dark:text-slate-400 mb-1.5">Bio</label>
           <textarea
             rows={3}
             value={form.bio}
             onChange={(e) => handleChange('bio', e.target.value)}
             placeholder="Write a short bio about yourself…"
-            className="w-full px-3.5 py-2.5 text-sm text-gray-800 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-[#7c3aed] focus:bg-white focus:ring-2 focus:ring-[#7c3aed]/10 transition resize-none"
+            className="w-full px-3.5 py-2.5 text-sm text-gray-800 dark:text-slate-100 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl outline-none focus:border-[#7c3aed] focus:bg-white dark:focus:bg-slate-700 focus:ring-2 focus:ring-[#7c3aed]/10 transition resize-none"
           />
         </div>
       </Section>
@@ -141,10 +138,10 @@ export default function ProfilePage() {
 
 function Section({ title, description, children }: { title: string; description: string; children: React.ReactNode }) {
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8 flex flex-col gap-5">
-      <div className="border-b border-gray-100 pb-4">
-        <h3 className="text-sm font-bold text-gray-800">{title}</h3>
-        <p className="text-xs text-gray-400 mt-0.5">{description}</p>
+    <div className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm p-6 sm:p-8 flex flex-col gap-5">
+      <div className="border-b border-gray-100 dark:border-slate-800 pb-4">
+        <h3 className="text-sm font-bold text-gray-800 dark:text-slate-100">{title}</h3>
+        <p className="text-xs text-gray-400 dark:text-slate-500 mt-0.5">{description}</p>
       </div>
       {children}
     </div>
@@ -154,13 +151,13 @@ function Section({ title, description, children }: { title: string; description:
 function InputField({ field, value, onChange }: { field: Field; value: string; onChange: (v: string) => void }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <label className="text-xs font-semibold text-gray-600">{field.label}</label>
+      <label className="text-xs font-semibold text-gray-600 dark:text-slate-400">{field.label}</label>
       <input
         type={field.type ?? 'text'}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={field.placeholder}
-        className="px-3.5 py-2.5 text-sm text-gray-800 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-[#7c3aed] focus:bg-white focus:ring-2 focus:ring-[#7c3aed]/10 transition"
+        className="px-3.5 py-2.5 text-sm text-gray-800 dark:text-slate-100 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl outline-none focus:border-[#7c3aed] focus:bg-white dark:focus:bg-slate-700 focus:ring-2 focus:ring-[#7c3aed]/10 transition placeholder:text-gray-400 dark:placeholder:text-slate-500"
       />
     </div>
   )

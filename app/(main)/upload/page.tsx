@@ -5,11 +5,11 @@ import { useEffect, useRef, useState } from 'react'
 type UploadedFile = {
   id: string
   file: File
-  previewUrl: string // always a blob URL — images and PDFs alike
+  previewUrl: string
 }
 
 const ACCEPTED_MIME = ['application/pdf', 'image/jpeg', 'image/png']
-const MAX_BYTES = 10 * 1024 * 1024 // 10 MB
+const MAX_BYTES = 10 * 1024 * 1024
 
 function formatSize(bytes: number) {
   if (bytes < 1024) return `${bytes} B`
@@ -42,17 +42,11 @@ export default function UploadPage() {
   const [dragOver, setDragOver] = useState(false)
   const [errors, setErrors] = useState<string[]>([])
 
-  // Keep a ref in sync so the unmount cleanup always sees the latest list
   const filesRef = useRef<UploadedFile[]>([])
   useEffect(() => { filesRef.current = files }, [files])
 
-  // Revoke all blob URLs when the component unmounts to prevent memory leaks
   useEffect(() => {
-    return () => {
-      filesRef.current.forEach((f) => {
-        if (f.previewUrl) URL.revokeObjectURL(f.previewUrl)
-      })
-    }
+    return () => { filesRef.current.forEach((f) => URL.revokeObjectURL(f.previewUrl)) }
   }, [])
 
   function addFiles(incoming: FileList | File[]) {
@@ -61,24 +55,10 @@ export default function UploadPage() {
     const valid: UploadedFile[] = []
 
     for (const file of list) {
-      if (!ACCEPTED_MIME.includes(file.type)) {
-        newErrors.push(`"${file.name}" is not a supported format.`)
-        continue
-      }
-      if (file.size > MAX_BYTES) {
-        newErrors.push(`"${file.name}" exceeds 10 MB.`)
-        continue
-      }
-      const isDuplicate = filesRef.current.some(
-        (f) => f.file.name === file.name && f.file.size === file.size
-      )
-      if (isDuplicate) continue
-
-      valid.push({
-        id: crypto.randomUUID(),
-        file,
-        previewUrl: URL.createObjectURL(file),
-      })
+      if (!ACCEPTED_MIME.includes(file.type)) { newErrors.push(`"${file.name}" is not a supported format.`); continue }
+      if (file.size > MAX_BYTES) { newErrors.push(`"${file.name}" exceeds 10 MB.`); continue }
+      if (filesRef.current.some((f) => f.file.name === file.name && f.file.size === file.size)) continue
+      valid.push({ id: crypto.randomUUID(), file, previewUrl: URL.createObjectURL(file) })
     }
 
     setErrors(newErrors)
@@ -87,7 +67,7 @@ export default function UploadPage() {
 
   function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.files) addFiles(e.target.files)
-    e.target.value = '' // reset so same file can be re-added after removal
+    e.target.value = ''
   }
 
   function handleDrop(e: React.DragEvent<HTMLDivElement>) {
@@ -105,27 +85,19 @@ export default function UploadPage() {
   }
 
   function removeAll() {
-    files.forEach((f) => { if (f.previewUrl) URL.revokeObjectURL(f.previewUrl) })
+    files.forEach((f) => URL.revokeObjectURL(f.previewUrl))
     setFiles([])
   }
 
   return (
     <div className="flex flex-col gap-6 sm:gap-8 max-w-3xl mx-auto w-full">
-      {/* Page header */}
+      {/* Header */}
       <div>
-        <h2 className="text-xl sm:text-2xl font-bold text-gray-900">File Upload</h2>
-        <p className="mt-1 text-gray-500 text-sm">Upload your visa documents for verification.</p>
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-slate-50">File Upload</h2>
+        <p className="mt-1 text-gray-500 dark:text-slate-400 text-sm">Upload your visa documents for verification.</p>
       </div>
 
-      {/* Hidden file input */}
-      <input
-        ref={inputRef}
-        type="file"
-        accept=".pdf,.jpg,.jpeg,.png"
-        multiple
-        className="hidden"
-        onChange={handleInputChange}
-      />
+      <input ref={inputRef} type="file" accept=".pdf,.jpg,.jpeg,.png" multiple className="hidden" onChange={handleInputChange} />
 
       {/* Drop zone */}
       <div
@@ -139,12 +111,12 @@ export default function UploadPage() {
         onDragLeave={() => setDragOver(false)}
         onDrop={handleDrop}
         className={[
-          'bg-white rounded-2xl border-2 border-dashed transition-all duration-200',
+          'rounded-2xl border-2 border-dashed transition-all duration-200',
           'p-8 sm:p-12 flex flex-col items-center justify-center gap-4 text-center cursor-pointer select-none',
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7c3aed] focus-visible:ring-offset-2',
           dragOver
-            ? 'border-[#7c3aed] bg-[#faf5ff] scale-[1.01] shadow-lg shadow-purple-100'
-            : 'border-gray-200 hover:border-[#7c3aed] hover:bg-gray-50/50',
+            ? 'border-[#7c3aed] bg-[#faf5ff] dark:bg-purple-900/20 scale-[1.01] shadow-lg shadow-purple-100 dark:shadow-purple-900/20'
+            : 'bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-700 hover:border-[#7c3aed] hover:bg-gray-50/50 dark:hover:bg-slate-800/50',
         ].join(' ')}
       >
         <div
@@ -155,24 +127,18 @@ export default function UploadPage() {
               : 'linear-gradient(135deg, #ede9fe, #dbeafe)',
           }}
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            className="w-7 h-7 sm:w-8 sm:h-8"
-            style={{ color: dragOver ? 'white' : '#7c3aed' }}
-          >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-7 h-7 sm:w-8 sm:h-8" style={{ color: dragOver ? 'white' : '#7c3aed' }}>
             <path fillRule="evenodd" d="M11.47 2.47a.75.75 0 011.06 0l4.5 4.5a.75.75 0 01-1.06 1.06l-3.22-3.22V16.5a.75.75 0 01-1.5 0V4.81L8.03 8.03a.75.75 0 01-1.06-1.06l4.5-4.5zM3 15.75a.75.75 0 01.75.75v2.25a1.5 1.5 0 001.5 1.5h13.5a1.5 1.5 0 001.5-1.5V16.5a.75.75 0 011.5 0v2.25a3 3 0 01-3 3H5.25a3 3 0 01-3-3V16.5a.75.75 0 01.75-.75z" clipRule="evenodd" />
           </svg>
         </div>
 
         <div className="flex flex-col gap-1.5 pointer-events-none">
-          <p className="text-sm sm:text-base font-semibold text-gray-700">
+          <p className="text-sm sm:text-base font-semibold text-gray-700 dark:text-slate-200">
             {dragOver ? 'Drop to upload' : (
               <>Drop your files here, or <span className="text-[#7c3aed] underline">browse</span></>
             )}
           </p>
-          <p className="text-xs sm:text-sm text-gray-400">Maximum file size: 10 MB per file</p>
+          <p className="text-xs sm:text-sm text-gray-400 dark:text-slate-500">Maximum file size: 10 MB per file</p>
         </div>
 
         <div className="flex items-center gap-2 flex-wrap justify-center pointer-events-none">
@@ -184,11 +150,11 @@ export default function UploadPage() {
         </div>
       </div>
 
-      {/* Validation errors */}
+      {/* Errors */}
       {errors.length > 0 && (
-        <div className="bg-red-50 border border-red-100 rounded-xl p-4 flex flex-col gap-1.5">
+        <div className="bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-800/40 rounded-xl p-4 flex flex-col gap-1.5">
           {errors.map((err, i) => (
-            <div key={i} className="flex items-start gap-2 text-sm text-red-600">
+            <div key={i} className="flex items-start gap-2 text-sm text-red-600 dark:text-red-400">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 shrink-0 mt-0.5">
                 <path fillRule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" clipRule="evenodd" />
               </svg>
@@ -199,8 +165,8 @@ export default function UploadPage() {
       )}
 
       {/* Guidelines */}
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 sm:p-6">
-        <h3 className="text-sm font-semibold text-gray-700 mb-4">Upload Guidelines</h3>
+      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm p-5 sm:p-6">
+        <h3 className="text-sm font-semibold text-gray-700 dark:text-slate-200 mb-4">Upload Guidelines</h3>
         <ul className="flex flex-col gap-3">
           {guidelines.map((item, i) => (
             <li key={i} className="flex items-start gap-3">
@@ -209,7 +175,7 @@ export default function UploadPage() {
                   <path fillRule="evenodd" d="M19.916 4.626a.75.75 0 0 1 .208 1.04l-9 13.5a.75.75 0 0 1-1.154.114l-6-6a.75.75 0 0 1 1.06-1.06l5.353 5.353 8.493-12.74a.75.75 0 0 1 1.04-.207Z" clipRule="evenodd" />
                 </svg>
               </span>
-              <span className="text-sm text-gray-600 leading-relaxed">{item.text}</span>
+              <span className="text-sm text-gray-600 dark:text-slate-300 leading-relaxed">{item.text}</span>
             </li>
           ))}
         </ul>
@@ -218,31 +184,26 @@ export default function UploadPage() {
       {/* Preview grid */}
       <div>
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+          <h3 className="text-sm font-semibold text-gray-700 dark:text-slate-200 flex items-center gap-2">
             Uploaded Files
             {files.length > 0 && (
-              <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-[#ede9fe] text-[#7c3aed]">
-                {files.length}
-              </span>
+              <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-[#ede9fe] text-[#7c3aed]">{files.length}</span>
             )}
           </h3>
           {files.length > 0 && (
-            <button
-              onClick={removeAll}
-              className="text-xs text-red-400 hover:text-red-600 transition-colors cursor-pointer"
-            >
+            <button onClick={removeAll} className="text-xs text-red-400 hover:text-red-600 transition-colors cursor-pointer">
               Remove all
             </button>
           )}
         </div>
 
         {files.length === 0 ? (
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-8 flex flex-col items-center justify-center gap-2 text-center">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-8 h-8 text-gray-200">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm p-8 flex flex-col items-center justify-center gap-2 text-center">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-8 h-8 text-gray-200 dark:text-slate-700">
               <path fillRule="evenodd" d="M5.625 1.5c-1.036 0-1.875.84-1.875 1.875v17.25c0 1.035.84 1.875 1.875 1.875h12.75c1.035 0 1.875-.84 1.875-1.875V12.75A3.75 3.75 0 0 0 16.5 9h-1.875a1.875 1.875 0 0 1-1.875-1.875V5.25A3.75 3.75 0 0 0 9 1.5H5.625Z" clipRule="evenodd" />
               <path d="M12.971 1.816A5.23 5.23 0 0 1 14.25 5.25v1.875c0 .207.168.375.375.375H16.5a5.23 5.23 0 0 1 3.434 1.279 9.768 9.768 0 0 0-6.963-6.963Z" />
             </svg>
-            <p className="text-sm text-gray-400">No files uploaded yet</p>
+            <p className="text-sm text-gray-400 dark:text-slate-500">No files uploaded yet</p>
           </div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
@@ -250,33 +211,19 @@ export default function UploadPage() {
               const badge = fileTypeBadge(file)
               return (
                 <div key={id} className="group flex flex-col gap-2">
-                  {/* Preview card */}
-                  <div className="relative aspect-square rounded-xl overflow-hidden border border-gray-100 bg-white shadow-sm">
+                  <div className="relative aspect-square rounded-xl overflow-hidden border border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm">
                     {file.type === 'application/pdf' ? (
-                      /* PDF — render first page via iframe, scaled to fit the card */
                       <iframe
                         src={previewUrl}
                         title={file.name}
                         className="absolute top-0 left-0 border-0 pointer-events-none overflow-hidden"
-                        style={{
-                          width: '200%',
-                          height: '200%',
-                          transform: 'scale(0.5)',
-                          transformOrigin: 'top left',
-                          overflow: 'hidden',
-                        }}
+                        style={{ width: '200%', height: '200%', transform: 'scale(0.5)', transformOrigin: 'top left', overflow: 'hidden' }}
                       />
                     ) : (
-                      /* Image preview */
                       // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={previewUrl}
-                        alt={file.name}
-                        className="w-full h-full object-cover"
-                      />
+                      <img src={previewUrl} alt={file.name} className="w-full h-full object-cover" />
                     )}
 
-                    {/* Hover overlay with remove button */}
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all duration-200 flex items-center justify-center">
                       <button
                         onClick={() => removeFile(id)}
@@ -289,21 +236,14 @@ export default function UploadPage() {
                       </button>
                     </div>
 
-                    {/* Type badge — top left */}
-                    <span
-                      className="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded-md text-xs font-bold"
-                      style={{ background: badge.bg, color: badge.color }}
-                    >
+                    <span className="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded-md text-xs font-bold" style={{ background: badge.bg, color: badge.color }}>
                       {badge.label}
                     </span>
                   </div>
 
-                  {/* File info below card */}
                   <div className="flex flex-col gap-0.5 px-0.5">
-                    <span className="text-xs font-medium text-gray-700 truncate" title={file.name}>
-                      {file.name}
-                    </span>
-                    <span className="text-xs text-gray-400">{formatSize(file.size)}</span>
+                    <span className="text-xs font-medium text-gray-700 dark:text-slate-300 truncate" title={file.name}>{file.name}</span>
+                    <span className="text-xs text-gray-400 dark:text-slate-500">{formatSize(file.size)}</span>
                   </div>
                 </div>
               )
