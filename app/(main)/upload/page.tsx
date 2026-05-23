@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 type UploadedFile = {
   id: string
@@ -64,6 +65,7 @@ const VISA_TYPES: { id: VisaTypeId; label: string; description: string; icon: Re
 ]
 
 export default function UploadPage() {
+  const router = useRouter()
   const inputRef = useRef<HTMLInputElement>(null)
   const [files, setFiles] = useState<UploadedFile[]>([])
   const [dragOver, setDragOver] = useState(false)
@@ -542,6 +544,7 @@ export default function UploadPage() {
             <div className="flex items-center gap-3 pt-1">
               <button
                 disabled={files.length === 0}
+                onClick={() => router.push('/review')}
                 className="flex-1 py-3 rounded-xl text-sm font-bold text-white transition-all duration-150 active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
                 style={{ background: 'linear-gradient(135deg, #7c3aed, #2563eb)' }}
               >
