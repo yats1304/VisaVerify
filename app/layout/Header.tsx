@@ -87,7 +87,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
   }
 
   return (
-    <header className="h-14 sm:h-16 bg-white dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800 flex items-center justify-between px-4 sm:px-6 shrink-0 relative z-10">
+    <header className="h-14 sm:h-16 bg-white dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800 flex items-center justify-between px-4 sm:px-6 shrink-0 relative z-50">
       <div className="flex items-center gap-3">
         {/* Hamburger — mobile only */}
         <button
@@ -124,7 +124,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
           </button>
 
           {notifOpen && (
-            <div className="absolute right-0 top-full mt-2 w-80 bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-gray-100 dark:border-slate-800 overflow-hidden">
+            <div className="absolute right-0 top-full mt-2 w-80 bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-gray-100 dark:border-slate-800 overflow-hidden z-50">
               <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 dark:border-slate-800">
                 <span className="text-sm font-semibold text-gray-800 dark:text-slate-100">Notifications</span>
                 {unreadCount > 0 && (
@@ -193,7 +193,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
           </button>
 
           {profileOpen && (
-            <div className="absolute right-0 top-full mt-2 w-56 bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-gray-100 dark:border-slate-800 overflow-hidden">
+            <div className="absolute right-0 top-full mt-2 w-56 bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-gray-100 dark:border-slate-800 overflow-hidden z-50">
               <div className="px-4 py-3.5 border-b border-gray-100 dark:border-slate-800">
                 <div className="flex items-center gap-3">
                   <div
