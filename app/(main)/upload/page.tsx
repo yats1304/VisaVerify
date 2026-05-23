@@ -131,18 +131,31 @@ export default function UploadPage() {
   return (
     <div className="flex flex-col">
 
-      {/* Hero banner — breaks out of main padding */}
+      {/* Hero — VisaVerify brand gradient */}
       <div
-        className="-mx-4 sm:-mx-6 -mt-4 sm:-mt-6 mb-8 sm:mb-10 px-6 sm:px-12 py-10 sm:py-14"
-        style={{ background: 'linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 60%, #2563eb 100%)' }}
+        className="-mx-4 sm:-mx-6 -mt-4 sm:-mt-6 mb-8 sm:mb-10 relative overflow-hidden px-6 sm:px-10 py-9 sm:py-12"
+        style={{ background: 'linear-gradient(135deg, #7c3aed 0%, #4f46e5 45%, #2563eb 100%)' }}
       >
-        <p className="text-xs font-bold tracking-widest text-blue-200 uppercase mb-3">STEP 1 OF 1</p>
-        <h1 className="text-2xl sm:text-4xl font-bold text-white mb-2 leading-tight">
-          Upload Your Visa Documents
-        </h1>
-        <p className="text-blue-200 text-sm sm:text-base max-w-xl leading-relaxed">
-          Upload your documents and let our AI verify them — results in under 5 minutes.
-        </p>
+        {/* Decorative blobs */}
+        <div className="absolute -top-10 -right-10 w-56 h-56 rounded-full opacity-[0.12]" style={{ background: 'radial-gradient(circle, white, transparent 70%)' }} />
+        <div className="absolute -bottom-8 left-1/4 w-36 h-36 rounded-full opacity-[0.07]" style={{ background: 'white' }} />
+
+        <div className="relative z-10 max-w-2xl">
+          <div className="flex items-center gap-2 mb-3">
+            <div className="w-6 h-6 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" className="w-3.5 h-3.5">
+                <path fillRule="evenodd" d="M12.516 2.17a.75.75 0 0 0-1.032 0 11.209 11.209 0 0 1-7.877 3.08.75.75 0 0 0-.722.515A12.74 12.74 0 0 0 2.25 9.75c0 5.942 4.064 10.933 9.563 12.348a.749.749 0 0 0 .374 0c5.499-1.415 9.563-6.406 9.563-12.348 0-1.39-.223-2.73-.635-3.985a.75.75 0 0 0-.722-.516l-.143.001c-2.996 0-5.717-1.17-7.734-3.08Zm3.094 8.016a.75.75 0 1 0-1.22-.872l-3.236 4.53-1.522-1.521a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.648-5.353Z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <span className="text-[11px] font-bold tracking-widest text-purple-100 uppercase">Step 1 of 1</span>
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-bold text-white mb-1.5 leading-tight">
+            Upload Your Visa Documents
+          </h1>
+          <p className="text-purple-100 text-sm sm:text-[15px] leading-relaxed">
+            Upload your documents and let our AI verify them — results in under 5 minutes.
+          </p>
+        </div>
       </div>
 
       <input
@@ -155,37 +168,49 @@ export default function UploadPage() {
       />
 
       {/* Two-column layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-[360px_1fr] gap-6 sm:gap-8 max-w-6xl mx-auto w-full">
+      <div className="grid grid-cols-1 lg:grid-cols-[340px_1fr] gap-6 sm:gap-8 max-w-6xl mx-auto w-full">
 
         {/* ── Left: info panel ── */}
         <div className="flex flex-col gap-4">
 
           {/* What We Analyze */}
-          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm p-6">
-            <h3 className="font-bold text-gray-900 dark:text-slate-50 text-base mb-4">What We Analyze</h3>
-            <ul className="flex flex-col gap-3">
-              {WHAT_WE_ANALYZE.map((item) => (
-                <li key={item} className="flex items-center gap-3">
-                  <div
-                    className="w-5 h-5 rounded-full flex items-center justify-center shrink-0"
-                    style={{ background: '#1e3a8a' }}
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" className="w-3 h-3">
-                      <path fillRule="evenodd" d="M19.916 4.626a.75.75 0 0 1 .208 1.04l-9 13.5a.75.75 0 0 1-1.154.114l-6-6a.75.75 0 0 1 1.06-1.06l5.353 5.353 8.493-12.74a.75.75 0 0 1 1.04-.207Z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                  <span className="text-sm text-gray-700 dark:text-slate-300">{item}</span>
-                </li>
-              ))}
-            </ul>
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm overflow-hidden">
+            <div className="h-[3px]" style={{ background: 'linear-gradient(90deg, #7c3aed, #2563eb)' }} />
+            <div className="p-5 sm:p-6">
+              <div className="flex items-center gap-2.5 mb-4">
+                <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0" style={{ background: 'linear-gradient(135deg, #ede9fe, #dbeafe)' }}>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5 text-[#7c3aed]">
+                    <path d="M18.375 2.25c-1.035 0-1.875.84-1.875 1.875v15.75c0 1.035.84 1.875 1.875 1.875h.75c1.035 0 1.875-.84 1.875-1.875V4.125c0-1.036-.84-1.875-1.875-1.875h-.75ZM9.75 8.625c0-1.036.84-1.875 1.875-1.875h.75c1.036 0 1.875.84 1.875 1.875v11.25c0 1.035-.84 1.875-1.875 1.875h-.75a1.875 1.875 0 0 1-1.875-1.875V8.625ZM3 13.125c0-1.036.84-1.875 1.875-1.875h.75c1.036 0 1.875.84 1.875 1.875v6.75c0 1.035-.84 1.875-1.875 1.875h-.75A1.875 1.875 0 0 1 3 19.875v-6.75Z" />
+                  </svg>
+                </div>
+                <h3 className="font-bold text-gray-900 dark:text-slate-50 text-sm">What We Analyze</h3>
+              </div>
+              <ul className="flex flex-col gap-2.5">
+                {WHAT_WE_ANALYZE.map((item) => (
+                  <li key={item} className="flex items-center gap-3">
+                    <div
+                      className="w-4 h-4 rounded-full flex items-center justify-center shrink-0"
+                      style={{ background: 'linear-gradient(135deg, #7c3aed, #2563eb)' }}
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" className="w-2.5 h-2.5">
+                        <path fillRule="evenodd" d="M19.916 4.626a.75.75 0 0 1 .208 1.04l-9 13.5a.75.75 0 0 1-1.154.114l-6-6a.75.75 0 0 1 1.06-1.06l5.353 5.353 8.493-12.74a.75.75 0 0 1 1.04-.207Z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <span className="text-sm text-gray-600 dark:text-slate-400">{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
 
           {/* Processing Time */}
-          <div className="rounded-2xl border border-amber-200 dark:border-amber-800/30 bg-amber-50 dark:bg-amber-900/10 p-5">
-            <div className="flex items-center gap-2 mb-1.5">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-amber-500 shrink-0">
-                <path fillRule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clipRule="evenodd" />
-              </svg>
+          <div className="rounded-2xl border border-amber-100 dark:border-amber-900/20 bg-gradient-to-br from-amber-50 to-orange-50/60 dark:from-amber-950/20 dark:to-orange-950/10 p-5">
+            <div className="flex items-center gap-2.5 mb-1.5">
+              <div className="w-6 h-6 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5 text-amber-500">
+                  <path fillRule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clipRule="evenodd" />
+                </svg>
+              </div>
               <h4 className="font-bold text-amber-700 dark:text-amber-400 text-sm">Processing Time</h4>
             </div>
             <p className="text-sm text-amber-700/80 dark:text-amber-300/70 leading-relaxed">
@@ -194,14 +219,16 @@ export default function UploadPage() {
           </div>
 
           {/* AI Standards */}
-          <div className="rounded-2xl border border-blue-200 dark:border-blue-800/30 bg-blue-50 dark:bg-blue-900/10 p-5">
-            <div className="flex items-center gap-2 mb-1.5">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0">
-                <path fillRule="evenodd" d="M12.516 2.17a.75.75 0 0 0-1.032 0 11.209 11.209 0 0 1-7.877 3.08.75.75 0 0 0-.722.515A12.74 12.74 0 0 0 2.25 9.75c0 5.942 4.064 10.933 9.563 12.348a.749.749 0 0 0 .374 0c5.499-1.415 9.563-6.406 9.563-12.348 0-1.39-.223-2.73-.635-3.985a.75.75 0 0 0-.722-.516l-.143.001c-2.996 0-5.717-1.17-7.734-3.08Zm3.094 8.016a.75.75 0 1 0-1.22-.872l-3.236 4.53-1.522-1.521a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.648-5.353Z" clipRule="evenodd" />
-              </svg>
-              <h4 className="font-bold text-blue-700 dark:text-blue-400 text-sm">AI-Verified Standards</h4>
+          <div className="rounded-2xl border border-purple-100 dark:border-purple-900/20 bg-gradient-to-br from-purple-50 to-blue-50/60 dark:from-purple-950/20 dark:to-blue-950/10 p-5">
+            <div className="flex items-center gap-2.5 mb-1.5">
+              <div className="w-6 h-6 rounded-lg bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5 text-[#7c3aed]">
+                  <path fillRule="evenodd" d="M12.516 2.17a.75.75 0 0 0-1.032 0 11.209 11.209 0 0 1-7.877 3.08.75.75 0 0 0-.722.515A12.74 12.74 0 0 0 2.25 9.75c0 5.942 4.064 10.933 9.563 12.348a.749.749 0 0 0 .374 0c5.499-1.415 9.563-6.406 9.563-12.348 0-1.39-.223-2.73-.635-3.985a.75.75 0 0 0-.722-.516l-.143.001c-2.996 0-5.717-1.17-7.734-3.08Zm3.094 8.016a.75.75 0 1 0-1.22-.872l-3.236 4.53-1.522-1.521a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.648-5.353Z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <h4 className="font-bold text-[#7c3aed] dark:text-purple-400 text-sm">AI-Verified Standards</h4>
             </div>
-            <p className="text-sm text-blue-700/80 dark:text-blue-300/70 leading-relaxed">
+            <p className="text-sm text-purple-700/80 dark:text-purple-300/70 leading-relaxed">
               Our system applies the same verification frameworks and thresholds used by immigration authorities worldwide.
             </p>
           </div>
@@ -209,10 +236,19 @@ export default function UploadPage() {
 
         {/* ── Right: upload + configure ── */}
         <div className="flex flex-col gap-5">
-          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm p-6 sm:p-8 flex flex-col gap-6">
-            <div>
-              <h2 className="text-lg font-bold text-gray-900 dark:text-slate-50">Upload &amp; Configure</h2>
-              <p className="text-sm text-gray-400 dark:text-slate-500 mt-0.5">PDF, JPG or PNG · Up to 10 MB per file</p>
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm overflow-hidden">
+            <div className="h-[3px]" style={{ background: 'linear-gradient(90deg, #7c3aed, #2563eb)' }} />
+            <div className="p-6 sm:p-8 flex flex-col gap-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-base font-bold text-gray-900 dark:text-slate-50">Upload &amp; Configure</h2>
+                <p className="text-xs text-gray-400 dark:text-slate-500 mt-0.5">PDF, JPG or PNG · Up to 10 MB per file</p>
+              </div>
+              {files.length > 0 && (
+                <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-purple-50 dark:bg-purple-950/30 text-[#7c3aed] border border-purple-100 dark:border-purple-900/30">
+                  {files.length} file{files.length > 1 ? 's' : ''} ready
+                </span>
+              )}
             </div>
 
             {/* Drop zone */}
@@ -515,11 +551,10 @@ export default function UploadPage() {
                 <p className="text-xs text-gray-400 dark:text-slate-500">Upload at least one file to continue</p>
               )}
             </div>
+            </div>
           </div>
         </div>
       </div>
-
-
     </div>
   )
 }
