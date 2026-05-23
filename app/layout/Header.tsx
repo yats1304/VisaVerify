@@ -87,22 +87,32 @@ export default function Header({ onMenuClick }: HeaderProps) {
   }
 
   return (
-    <header className="h-14 sm:h-16 bg-white dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800 flex items-center justify-between px-4 sm:px-6 shrink-0 relative z-50">
+    <header className="h-14 sm:h-16 shrink-0 relative z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl flex flex-col">
+      {/* Gradient accent line at top */}
+      <div className="h-[2px] w-full shrink-0" style={{ background: 'linear-gradient(90deg, #7c3aed 0%, #4f46e5 45%, #2563eb 100%)' }} />
+
+      <div className="flex-1 flex items-center justify-between px-4 sm:px-6 border-b border-gray-100/60 dark:border-slate-800/60">
+
       <div className="flex items-center gap-3">
         {/* Hamburger — mobile only */}
         <button
           onClick={onMenuClick}
           aria-label="Open navigation"
-          className="md:hidden w-9 h-9 rounded-lg flex items-center justify-center text-gray-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800 hover:text-gray-700 dark:hover:text-slate-200 transition-colors cursor-pointer"
+          className="md:hidden w-9 h-9 rounded-xl flex items-center justify-center text-gray-500 dark:text-slate-400 hover:bg-purple-50 dark:hover:bg-purple-950/30 hover:text-[#7c3aed] transition-colors cursor-pointer"
         >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
             <path fillRule="evenodd" d="M3 6.75A.75.75 0 0 1 3.75 6h16.5a.75.75 0 0 1 0 1.5H3.75A.75.75 0 0 1 3 6.75ZM3 12a.75.75 0 0 1 .75-.75h16.5a.75.75 0 0 1 0 1.5H3.75A.75.75 0 0 1 3 12Zm0 5.25a.75.75 0 0 1 .75-.75h16.5a.75.75 0 0 1 0 1.5H3.75a.75.75 0 0 1-.75-.75Z" clipRule="evenodd" />
           </svg>
         </button>
-        <h1 className="text-base sm:text-lg font-semibold text-gray-800 dark:text-slate-100">{title}</h1>
+
+        {/* Page title with subtle left accent */}
+        <div className="flex items-center gap-2.5">
+          <div className="hidden sm:block w-[3px] h-5 rounded-full" style={{ background: 'linear-gradient(180deg, #7c3aed, #2563eb)' }} />
+          <h1 className="text-base sm:text-[15px] font-bold text-gray-800 dark:text-slate-100 tracking-tight">{title}</h1>
+        </div>
       </div>
 
-      <div className="flex items-center gap-1 sm:gap-2">
+      <div className="flex items-center gap-1.5 sm:gap-2">
 
         {/* Notification bell */}
         <div ref={bellRef} className="relative">
@@ -111,52 +121,89 @@ export default function Header({ onMenuClick }: HeaderProps) {
             aria-label="Notifications"
             aria-expanded={notifOpen}
             aria-haspopup="true"
-            className="relative w-9 h-9 rounded-lg flex items-center justify-center text-gray-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800 hover:text-gray-700 dark:hover:text-slate-200 transition-colors cursor-pointer"
+            className={`relative w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-150 cursor-pointer ${
+              notifOpen
+                ? 'text-[#7c3aed] bg-purple-50 dark:bg-purple-950/40'
+                : 'text-gray-500 dark:text-slate-400 hover:bg-purple-50 dark:hover:bg-purple-950/30 hover:text-[#7c3aed]'
+            }`}
           >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
               <path fillRule="evenodd" d="M5.25 9a6.75 6.75 0 0 1 13.5 0v.75c0 2.123.8 4.057 2.118 5.52a.75.75 0 0 1-.297 1.206c-1.544.57-3.16.99-4.831 1.243a3.75 3.75 0 1 1-7.48 0 24.585 24.585 0 0 1-4.831-1.244.75.75 0 0 1-.298-1.205A8.217 8.217 0 0 0 5.25 9.75V9Zm4.502 8.9a2.25 2.25 0 1 0 4.496 0 25.057 25.057 0 0 1-4.496 0Z" clipRule="evenodd" />
             </svg>
             {unreadCount > 0 && (
-              <span className="absolute top-1 right-1 w-4 h-4 rounded-full text-white text-[10px] font-bold flex items-center justify-center" style={{ background: '#7c3aed' }}>
+              <span
+                className="absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full text-white text-[9px] font-bold flex items-center justify-center shadow-sm"
+                style={{ background: 'linear-gradient(135deg, #7c3aed, #2563eb)' }}
+              >
                 {unreadCount}
               </span>
             )}
           </button>
 
           {notifOpen && (
-            <div className="absolute right-0 top-full mt-2 w-80 bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-gray-100 dark:border-slate-800 overflow-hidden z-50">
-              <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 dark:border-slate-800">
-                <span className="text-sm font-semibold text-gray-800 dark:text-slate-100">Notifications</span>
+            <div className="
+              fixed inset-x-3 top-[3.75rem]
+              sm:absolute sm:inset-x-auto sm:right-0 sm:left-auto sm:top-full sm:mt-2 sm:w-80
+              bg-white dark:bg-slate-900
+              rounded-2xl shadow-2xl border border-gray-100 dark:border-slate-800
+              overflow-hidden z-50
+            ">
+              {/* Gradient top accent */}
+              <div className="h-[3px] w-full" style={{ background: 'linear-gradient(90deg, #7c3aed, #2563eb)' }} />
+
+              {/* Sticky header */}
+              <div className="sticky top-0 bg-white dark:bg-slate-900 flex items-center justify-between px-4 py-3 border-b border-gray-100 dark:border-slate-800 z-10">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-bold text-gray-800 dark:text-slate-100">Notifications</span>
+                  {unreadCount > 0 && (
+                    <span
+                      className="px-1.5 py-0.5 rounded-full text-[10px] font-bold text-white leading-none"
+                      style={{ background: 'linear-gradient(135deg, #7c3aed, #2563eb)' }}
+                    >
+                      {unreadCount}
+                    </span>
+                  )}
+                </div>
                 {unreadCount > 0 && (
-                  <button onClick={markAllRead} className="text-xs font-medium text-[#7c3aed] hover:underline cursor-pointer">
+                  <button
+                    onClick={markAllRead}
+                    className="text-xs font-semibold text-[#7c3aed] hover:text-purple-800 dark:hover:text-purple-300 transition-colors cursor-pointer"
+                  >
                     Mark all read
                   </button>
                 )}
               </div>
 
-              <ul>
+              {/* Scrollable list — max-height prevents overflow on short screens */}
+              <ul className="overflow-y-auto max-h-[min(calc(100vh-10rem),360px)]">
                 {notifications.map((n) => (
                   <li
                     key={n.id}
-                    className={`flex items-start gap-3 px-4 py-3 border-b border-gray-50 dark:border-slate-800 last:border-0 hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors cursor-pointer ${!n.read ? 'bg-purple-50/40 dark:bg-purple-900/10' : ''}`}
+                    className={`flex items-start gap-3 px-4 py-3.5 border-b border-gray-50 dark:border-slate-800/70 last:border-0 hover:bg-gray-50 dark:hover:bg-slate-800/60 transition-colors cursor-pointer ${!n.read ? 'bg-purple-50/50 dark:bg-purple-950/20' : ''}`}
                   >
-                    <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 mt-0.5" style={{ background: n.bg, color: n.color }}>
+                    <div
+                      className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 mt-0.5 shadow-sm"
+                      style={{ background: n.bg, color: n.color }}
+                    >
                       {n.icon}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className={`text-sm leading-snug ${!n.read ? 'font-semibold text-gray-800 dark:text-slate-100' : 'font-medium text-gray-600 dark:text-slate-400'}`}>
+                      <p className={`text-sm leading-snug ${!n.read ? 'font-semibold text-gray-900 dark:text-slate-50' : 'font-medium text-gray-600 dark:text-slate-400'}`}>
                         {n.title}
                       </p>
                       <p className="text-xs text-gray-400 dark:text-slate-500 mt-0.5 leading-relaxed">{n.desc}</p>
-                      <p className="text-xs text-gray-300 dark:text-slate-600 mt-1">{n.time}</p>
+                      <p className="text-[11px] text-gray-300 dark:text-slate-600 mt-1 font-medium">{n.time}</p>
                     </div>
-                    {!n.read && <span className="w-2 h-2 rounded-full shrink-0 mt-1.5" style={{ background: '#7c3aed' }} />}
+                    {!n.read && (
+                      <span className="w-2 h-2 rounded-full shrink-0 mt-1.5" style={{ background: '#7c3aed' }} />
+                    )}
                   </li>
                 ))}
               </ul>
 
-              <div className="px-4 py-2.5 border-t border-gray-100 dark:border-slate-800 text-center">
-                <button className="text-xs font-medium text-[#7c3aed] hover:underline cursor-pointer">
+              {/* Sticky footer */}
+              <div className="sticky bottom-0 bg-white dark:bg-slate-900 px-4 py-3 border-t border-gray-100 dark:border-slate-800 text-center">
+                <button className="text-xs font-semibold text-[#7c3aed] hover:text-purple-800 dark:hover:text-purple-300 transition-colors cursor-pointer">
                   View all notifications
                 </button>
               </div>
@@ -164,7 +211,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
           )}
         </div>
 
-        <div className="w-px h-6 bg-gray-100 dark:bg-slate-800 mx-0.5 sm:mx-1" />
+        <div className="w-px h-5 mx-0.5 sm:mx-1 rounded-full" style={{ background: 'linear-gradient(180deg, transparent, #a78bfa55, transparent)' }} />
 
         {/* Profile */}
         <div ref={profileRef} className="relative">
@@ -173,15 +220,21 @@ export default function Header({ onMenuClick }: HeaderProps) {
             aria-label="Profile menu"
             aria-expanded={profileOpen}
             aria-haspopup="true"
-            className="flex items-center gap-2 pl-0.5 sm:pl-1 cursor-pointer rounded-lg hover:bg-gray-50 dark:hover:bg-slate-800 px-2 py-1 transition-colors"
+            className={`flex items-center gap-2 px-2 py-1 rounded-xl transition-all duration-150 cursor-pointer ${
+              profileOpen
+                ? 'bg-purple-50 dark:bg-purple-950/40'
+                : 'hover:bg-purple-50 dark:hover:bg-purple-950/30'
+            }`}
           >
-            <div
-              className="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold shrink-0"
-              style={{ background: 'linear-gradient(135deg, #7c3aed, #2563eb)' }}
-            >
-              V
+            {/* Avatar with gradient ring */}
+            <div className="p-[2px] rounded-full shrink-0" style={{ background: 'linear-gradient(135deg, #7c3aed, #2563eb)' }}>
+              <div className="w-7 h-7 rounded-full bg-white dark:bg-slate-900 flex items-center justify-center">
+                <span className="text-xs font-bold" style={{ background: 'linear-gradient(135deg, #7c3aed, #2563eb)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                  V
+                </span>
+              </div>
             </div>
-            <span className="hidden sm:block text-sm font-medium text-gray-800 dark:text-slate-100">VisaVerify</span>
+            <span className="hidden sm:block text-sm font-semibold text-gray-800 dark:text-slate-100">VisaVerify</span>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
@@ -193,7 +246,16 @@ export default function Header({ onMenuClick }: HeaderProps) {
           </button>
 
           {profileOpen && (
-            <div className="absolute right-0 top-full mt-2 w-56 bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-gray-100 dark:border-slate-800 overflow-hidden z-50">
+            <div className="
+              fixed right-3 top-[3.75rem]
+              sm:absolute sm:right-0 sm:top-full sm:mt-2
+              w-[calc(100vw-1.5rem)] sm:w-56
+              max-w-xs
+              bg-white dark:bg-slate-900
+              rounded-2xl shadow-2xl border border-gray-100 dark:border-slate-800
+              overflow-hidden z-50
+            ">
+              <div className="h-[3px] w-full" style={{ background: 'linear-gradient(90deg, #7c3aed, #2563eb)' }} />
               <div className="px-4 py-3.5 border-b border-gray-100 dark:border-slate-800">
                 <div className="flex items-center gap-3">
                   <div
@@ -257,6 +319,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
           )}
         </div>
 
+      </div>
       </div>
     </header>
   )
