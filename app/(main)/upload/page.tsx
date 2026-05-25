@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { EvaluationModal } from "@/app/components/EvaluationModal";
 
 type UploadedFile = {
   id: string;
@@ -93,6 +94,7 @@ export default function UploadPage() {
   const [errors, setErrors] = useState<string[]>([]);
   const [visaType, setVisaType] = useState<VisaTypeId>("eb1a");
   const [replacingFileId, setReplacingFileId] = useState<string | null>(null);
+  const [showEval, setShowEval] = useState(false);
 
   const filesRef = useRef<UploadedFile[]>([]);
   useEffect(() => {
@@ -175,6 +177,8 @@ export default function UploadPage() {
   }
 
   return (
+    <>
+    {showEval && <EvaluationModal onClose={() => setShowEval(false)} />}
     <div className="flex flex-col">
       {/* Hero — TheVisaWizard brand gradient */}
       <div
@@ -820,7 +824,7 @@ export default function UploadPage() {
               <div className="flex items-center gap-3 pt-1">
                 <button
                   disabled={files.length === 0}
-                  onClick={() => router.push("/review")}
+                  onClick={() => setShowEval(true)}
                   className="flex-1 py-3 rounded-xl text-sm font-bold text-white transition-all duration-150 active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
                   style={{
                     background: "linear-gradient(135deg, #7c3aed, #2563eb)",
@@ -839,5 +843,6 @@ export default function UploadPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }
