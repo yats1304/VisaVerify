@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "VisaVerify",
+  title: "TheVisaWizard",
   description: "AI-powered visa document verification",
 };
 
@@ -34,7 +34,7 @@ export default function RootLayout({
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
-          storageKey="visaverify-theme"
+          storageKey="TheVisaWizard-theme"
         >
           {children}
         </ThemeProvider>
